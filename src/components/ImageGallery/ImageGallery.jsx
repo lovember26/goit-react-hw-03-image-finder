@@ -12,34 +12,44 @@ import PropTypes from 'prop-types';
 export class ImageGallery extends Component {
   state = {
     gallery: [],
-    perPage: 12,
+    page: 1,
     isModalOpen: false,
     modalUrl: '',
     isLoading: false,
+    isShowBtn: false,
   };
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.value !== this.props.value) {
       this.setState({
+        gallery: [],
         isModalOpen: false,
-        perPage: 12,
+        page: 1,
+        isShowBtn: false,
       });
     }
     if (
       prevProps.value !== this.props.value ||
-      prevState.perPage !== this.state.perPage
+      prevState.page !== this.state.page
     ) {
       this.setState({
         isLoading: true,
       });
       try {
-        getImg(this.props.value, this.state.perPage)
+        getImg(this.props.value, this.state.page)
           .then(res => res.json())
           .then(data => {
-            if (data.hits.length === 0) {
+            this.setState({ isShowBtn: data.hits.length < data.totalHits });
+
+            if (data.total === 0) {
               Notify.failure('No results found!');
             }
-            this.setState({ gallery: data.hits });
+            this.setState(prevState => ({
+              gallery:
+                this.state.page === 1
+                  ? data.hits
+                  : [...prevState.gallery, ...data.hits],
+            }));
           })
           .finally(() => this.setState({ isLoading: false }));
       } catch (error) {
@@ -49,7 +59,7 @@ export class ImageGallery extends Component {
   }
   onClick = () => {
     this.setState(prevState => ({
-      perPage: prevState.perPage + 12,
+      page: prevState.page + 1,
     }));
   };
   handleModal = url => {
@@ -82,7 +92,7 @@ export class ImageGallery extends Component {
             );
           })}
         </Gallery>
-        {this.state.gallery.length > 11 && <Button onClick={this.onClick} />}
+        {this.state.isShowBtn && <Button onClick={this.onClick} />}
         {this.state.isLoading && <Loader />}
         {this.state.isModalOpen && (
           <Modal url={this.state.modalUrl} closeModal={this.closeModal} />
