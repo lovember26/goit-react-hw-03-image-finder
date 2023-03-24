@@ -81,7 +81,7 @@ export class ImageGallery extends Component {
             );
           })}
         </Gallery>
-        {this.state.gallery.length > 0 && <Button onClick={this.onClick} />}
+        {this.state.gallery.length > 11 && <Button onClick={this.onClick} />}
         {this.state.isLoading && <Loader />}
         {this.state.isModalOpen && (
           <Modal url={this.state.modalUrl} closeModal={this.closeModal} />
