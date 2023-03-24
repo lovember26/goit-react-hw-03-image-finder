@@ -38,7 +38,8 @@ export class ImageGallery extends Component {
           .then(data => {
             if (data.hits.length === 0) {
               Notify.failure('No results found!');
-            } else this.setState({ gallery: data.hits });
+            }
+            this.setState({ gallery: data.hits });
           })
           .finally(() => this.setState({ isLoading: false }));
       } catch (error) {
