@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import { Backdrop, ModalWrap } from './Modal.styled';
 import PropTypes from 'prop-types';
+
 export class Modal extends Component {
   state = {};
   componentDidMount() {
@@ -9,9 +10,9 @@ export class Modal extends Component {
   componentWillUnmount() {
     window.removeEventListener('keydown', this.handleModal);
   }
-  handleModal = ({ code }) => {
-    if (code === 'Escape') {
-      this.props.closeModal();
+  handleModal = e => {
+    if (e.code === 'Escape') {
+      this.props.closeModal(e);
     }
   };
   render() {

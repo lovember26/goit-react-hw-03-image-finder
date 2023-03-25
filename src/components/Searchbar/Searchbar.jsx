@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import { Header, Form, Button, Label, Input } from './Searchbar.styled';
 import PropTypes from 'prop-types';
+
 export class Searchbar extends Component {
   state = {
     value: '',
@@ -8,10 +9,14 @@ export class Searchbar extends Component {
   onChange = ({ target }) => {
     this.setState({ value: target.value });
   };
+  handleSubmit = e => {
+    e.preventDefault();
+    this.props.onSubmit(this.state.value);
+  };
   render() {
     return (
       <Header className="searchbar">
-        <Form className="form" onSubmit={this.props.onSubmit}>
+        <Form className="form" onSubmit={this.handleSubmit}>
           <Button type="submit" className="button">
             <Label className="button-label">Search</Label>
           </Button>
