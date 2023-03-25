@@ -13,6 +13,7 @@ export class App extends Component {
   state = {
     value: '',
     gallery: [],
+    totalImg: 0,
     page: 1,
     isModalOpen: false,
     modalUrl: '',
@@ -44,10 +45,7 @@ export class App extends Component {
           this.setState(prevState => ({
             gallery:
               page === 1 ? data.hits : [...prevState.gallery, ...data.hits],
-            isShowBtn:
-              data.totalHits > 12
-                ? this.state.gallery.length < data.totalHits
-                : false,
+            totalImg: data.totalHits,
           }));
         })
         .finally(() => this.setState({ isLoading: false }));
@@ -99,7 +97,9 @@ export class App extends Component {
             gallery={this.state.gallery}
             handleModal={this.handleModal}
           />
-          {this.state.isShowBtn && <Button onClick={this.onClick} />}
+          {this.state.gallery.length < this.state.totalImg && (
+            <Button onClick={this.onClick} />
+          )}
           {this.state.isLoading && <Loader />}
           {this.state.isModalOpen && (
             <Modal url={this.state.modalUrl} closeModal={this.closeModal} />
